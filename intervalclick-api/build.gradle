@@ -7,5 +7,5 @@ sourceCompatibility = JavaVersion.VERSION_1_7
 targetCompatibility = JavaVersion.VERSION_1_7
 
 dependencies {
-    compile 'org.androidannotations:androidannotations-api:4.1.0'
+    compile "org.androidannotations:androidannotations-api:$ANDROID_ANNOTATIONS_VERSION"
 }

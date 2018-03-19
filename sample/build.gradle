@@ -1,17 +1,28 @@
 apply plugin: 'com.android.application'
-apply plugin: 'android-apt'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.3"
+    compileSdkVersion COMPILE_SDK_VERSION
+    buildToolsVersion BUILD_TOOLS_VERSION
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
     defaultConfig {
         applicationId "moer.intervalclick.sample"
-        minSdkVersion 15
-        targetSdkVersion 24
+        minSdkVersion MIN_SDK_VERSION
+        targetSdkVersion TARGET_SDK_VERSION
         versionCode 1
         versionName "1.0.0"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["resourcePackageName": "moer.intervalclick"]
+            }
+        }
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -21,11 +32,14 @@ android {
 }
 
 dependencies {
-    testCompile 'junit:junit:4.12'
-    apt "org.androidannotations:androidannotations:4.1.0"
-    compile 'org.androidannotations:androidannotations-api:4.1.0'
-    apt project(':intervalclick')
-    compile project(':intervalclick-api')
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.android.support:design:24.2.1'
+    testImplementation 'junit:junit:4.12'
+
+    annotationProcessor "org.androidannotations:androidannotations:$ANDROID_ANNOTATIONS_VERSION"
+    implementation "org.androidannotations:androidannotations-api:$ANDROID_ANNOTATIONS_VERSION"
+
+    annotationProcessor project(':intervalclick')
+    implementation project(':intervalclick-api')
+
+    implementation "com.android.support:appcompat-v7:$SUPPORT_VERSION"
+    implementation "com.android.support:design:$SUPPORT_VERSION"
 }
