@@ -2,6 +2,7 @@ package moer.intervalclick.processor.handler;
 
 import com.helger.jcodemodel.AbstractJClass;
 import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JCodeModel;
 import com.helger.jcodemodel.JDefinedClass;
 import com.helger.jcodemodel.JExpr;
 import com.helger.jcodemodel.JFieldVar;
@@ -59,8 +60,9 @@ public class IntervalClickHandler extends AbstractViewListenerHandler {
 
     @Override
     protected void makeCall(JBlock listenerMethodBody, JInvocation call, TypeMirror returnType) {
-        JVar currentClickTime = listenerMethodBody.decl(JMod.NONE, JPrimitiveType.LONG, "currentClickMilliseconds", getCodeModel().directClass("android.os.SystemClock").staticInvoke("uptimeMillis"));
-        JVar elapsedTime = listenerMethodBody.decl(JMod.NONE, JPrimitiveType.LONG, "elapsedMilliseconds", JOp.minus(currentClickTime, lastClickMilliseconds));
+
+        JVar currentClickTime = listenerMethodBody.decl(JMod.NONE, getCodeModel().LONG, "currentClickMilliseconds", getCodeModel().directClass("android.os.SystemClock").staticInvoke("uptimeMillis"));
+        JVar elapsedTime = listenerMethodBody.decl(JMod.NONE, getCodeModel().LONG, "elapsedMilliseconds", JOp.minus(currentClickTime, lastClickMilliseconds));
         listenerMethodBody._if(JOp.lte(elapsedTime, intervalTime))._then()._return();
         listenerMethodBody.assign(lastClickMilliseconds, currentClickTime);
         listenerMethodBody.add(call);
@@ -79,8 +81,8 @@ public class IntervalClickHandler extends AbstractViewListenerHandler {
 
     @Override
     protected JMethod createListenerMethod(JDefinedClass listenerAnonymousClass) {
-        intervalTime = listenerAnonymousClass.field(JMod.PRIVATE | JMod.FINAL | JMod.FINAL, Long.class, "MIN_CLICK_INTERVAL_MILLISECONDS", JExpr.lit(intervalMilliseconds));
-        lastClickMilliseconds = listenerAnonymousClass.field(JMod.PRIVATE, JPrimitiveType.LONG, "lastClickMilliseconds", JExpr.lit(0L));
+        intervalTime = listenerAnonymousClass.field(JMod.PRIVATE | JMod.FINAL, Long.class, "MIN_CLICK_INTERVAL_MILLISECONDS", JExpr.lit(intervalMilliseconds));
+        lastClickMilliseconds = listenerAnonymousClass.field(JMod.PRIVATE, getCodeModel().LONG, "lastClickMilliseconds", JExpr.lit(0L));
         return listenerAnonymousClass.method(JMod.PUBLIC, getCodeModel().VOID, "onClick");
     }
 
